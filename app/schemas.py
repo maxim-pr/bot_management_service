@@ -32,4 +32,9 @@ class SignUpForm:
         self.password2 = password2
 
 
+class Bot(BaseModel):
+    bot_token: str
 
+
+class Bots(BaseModel):
+    bots: list[Bot]

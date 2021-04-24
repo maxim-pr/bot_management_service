@@ -53,13 +53,13 @@ def create_access_token(username: str, expires_delta: timedelta = None) -> str:
 async def get_current_user(token: str = Depends(oauth2_scheme)) -> UserDB:
     invalid_token_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Invalid token",
+        detail="Invalid access token",
         headers={"WWW-Authenticate": "Bearer"}
     )
 
     token_expired_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Token has expired",
+        detail="Access token has expired",
         headers={"WWW-Authenticate": "Bearer"}
     )
 
