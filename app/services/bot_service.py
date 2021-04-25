@@ -35,9 +35,6 @@ async def _process_updates(bot_token: str):
                 json_body["offset"] = update_id + 1
         except asyncio.CancelledError:
             break
-        finally:
-            await session.close()
-
         await asyncio.sleep(0.1)
 
     await session.close()
@@ -46,7 +43,7 @@ async def _process_updates(bot_token: str):
 async def run_bot(user: User, bot_token: str):
     bot_task = asyncio.get_event_loop().create_task(_process_updates(bot_token))
     if not bot_tasks.get(user.username):
-        bot_tasks[user.username] = {}
+        bot_tasks[user.username] = dict()
     bot_tasks[user.username][bot_token] = bot_task
 
 
