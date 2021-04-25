@@ -1,8 +1,21 @@
 import asyncio
-from app.schemas import User
+
 from aiohttp import ClientSession
 
+# dictionary with asyncio tasks representing currently running bots
 bot_tasks = dict()
+
+
+async def run_bot(user_id: str, bot_token: str):
+    bot_task = asyncio.get_event_loop().create_task(_process_updates(bot_token))
+    if not bot_tasks.get(user_id):
+        bot_tasks[user_id] = dict()
+    bot_tasks[user_id][bot_token] = bot_task
+
+
+async def stop_bot(user_id: str, bot_token: str):
+    bot_task = bot_tasks.get(user_id).get(bot_token)
+    bot_task.cancel()
 
 
 async def _process_updates(bot_token: str):
@@ -40,13 +53,4 @@ async def _process_updates(bot_token: str):
     await session.close()
 
 
-async def run_bot(user: User, bot_token: str):
-    bot_task = asyncio.get_event_loop().create_task(_process_updates(bot_token))
-    if not bot_tasks.get(user.username):
-        bot_tasks[user.username] = dict()
-    bot_tasks[user.username][bot_token] = bot_task
 
-
-async def stop_bot(user: User, bot_token: str):
-    bot_task = bot_tasks.get(user.username).get(bot_token)
-    bot_task.cancel()
