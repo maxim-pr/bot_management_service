@@ -107,6 +107,7 @@ async def sign_up(form_data: SignUpForm = Depends()):
     user_id = await db.add_user(UserWithoutId(username=form_data.username,
                                               first_name=form_data.first_name,
                                               last_name=form_data.last_name,
+                                              bots=[],
                                               hashed_password=crypt_context.hash(form_data.password1)))
     user = await db.get_user_by_id(user_id)
     return UserBase(**user.dict())
